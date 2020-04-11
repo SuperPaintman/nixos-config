@@ -24,6 +24,7 @@
     git
     jq
     tmux
+    unzip
     xclip
 
     # Shells.
@@ -43,6 +44,9 @@
 
     # Compilers and interpreters.
     go
+
+    # Misc.
+    nixpkgs-fmt
   ];
 
   # Programs.
