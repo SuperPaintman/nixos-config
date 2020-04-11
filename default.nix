@@ -42,6 +42,12 @@
     go
   ];
 
+  # Programs.
+  programs = {
+    fish.enable = true;
+    zsh.enable = true;
+  };
+
   # Time.
   time.timeZone = "Europe/Moscow";
 
@@ -66,11 +72,14 @@
 
     videoDrivers = [ "nvidia" ]; # TODO(SuperPaintman): enable it only on Sequoia.
   };
-  
+
   # Users.
+  users.defaultUserShell = pkgs.fish;
+
   users.users.superpaintman = {
     isNormalUser = true;
     uid = 1000;
     extraGroups = [ "wheel" ];
+    shell = pkgs.fish;
   };
 }
