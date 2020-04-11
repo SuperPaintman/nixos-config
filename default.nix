@@ -1,4 +1,4 @@
-{ pkgs, lib, options, ... }:
+{ pkgs, ... }:
 {
   # Boot.
   boot.cleanTmpDir = true; # Delete all files in `/tmp` during boot.
