@@ -3,6 +3,9 @@
   # Boot.
   boot.cleanTmpDir = true; # Delete all files in `/tmp` during boot.
 
+  # Nix.
+  nix.trustedUsers = [ "root" "@wheel" ];
+
   # Nix Packages.
   nixpkgs.config.allowUnfree = true;
 
