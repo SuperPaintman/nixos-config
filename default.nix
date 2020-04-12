@@ -65,6 +65,7 @@ in
     steam
 
     # Misc.
+    dbeaver # Universal SQL client.
     nixpkgs-fmt
   ];
 
