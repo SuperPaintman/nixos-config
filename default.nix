@@ -136,7 +136,7 @@ in
   };
 
   # Home Manager.
-  home-manager.users.superpaintman = (
+  home-manager.users = (
     let
       dotfiles = (
         # Use local copy of Dotfile if we have one.
@@ -149,49 +149,63 @@ in
           }
         )
       );
+
+      files = {
+        # Dotfiles.
+        ".dotfiles".source = dotfiles;
+
+        # Bash.
+        ".bashrc".source = "${dotfiles}/bash/.bashrc";
+        ".bash_profile".source = "${dotfiles}/bash/.bash_profile";
+        ".bash".source = "${dotfiles}/bash/.bash";
+
+        # Git.
+        ".gitconfig".source = "${dotfiles}/git/.gitconfig";
+
+        # Htop.
+        ".config/htop/htoprc".source = "${dotfiles}/htop/htoprc";
+
+        # NPM.
+        ".npmrc".source = "${dotfiles}/npm/.npmrc";
+
+        # Prettier.
+        ".prettierrc.js".source = "${dotfiles}/prettier/.prettierrc.js";
+
+        # TMUX.
+        ".tmux.conf".source = "${dotfiles}/tmux/.tmux.conf";
+        ".tmux".source = "${dotfiles}/tmux/.tmux";
+
+        # VIM.
+        ".vimrc".source = "${dotfiles}/vim/.vimrc";
+        ".vim".source = "${dotfiles}/vim/.vim";
+
+        # VS Code.
+        ".config/Code/User/settings.json".source = "${dotfiles}/vscode/settings.json";
+        ".config/Code/User/snippets".source = "${dotfiles}/vscode/snippets";
+
+        # Yarn.
+        ".yarnrc".source = "${dotfiles}/yarn/.yarnrc";
+
+        # ZSH.
+        ".zshrc".source = "${dotfiles}/zsh/.zshrc";
+        ".zsh".source = "${dotfiles}/zsh/.zsh";
+        ".oh-my-zsh".source = "${dotfiles}/zsh/.oh-my-zsh";
+        ".oh-my-zsh-custom".source = "${dotfiles}/zsh/.oh-my-zsh-custom";
+      };
     in
       {
-        home.file = {
-          # Dotfiles.
-          ".dotfiles".source = dotfiles;
+        superpaintman = {
+          # Or pick manually.
+          # lib.getAttrs [
+          #   # Dotfiles.
+          #   ".dotfiles"
+          # ] files;
 
-          # Bash.
-          ".bashrc".source = "${dotfiles}/bash/.bashrc";
-          ".bash_profile".source = "${dotfiles}/bash/.bash_profile";
-          ".bash".source = "${dotfiles}/bash/.bash";
+          home.file = files;
+        };
 
-          # Git.
-          ".gitconfig".source = "${dotfiles}/git/.gitconfig";
-
-          # Htop.
-          ".config/htop/htoprc".source = "${dotfiles}/htop/htoprc";
-
-          # NPM.
-          ".npmrc".source = "${dotfiles}/npm/.npmrc";
-
-          # Prettier.
-          ".prettierrc.js".source = "${dotfiles}/prettier/.prettierrc.js";
-
-          # TMUX.
-          ".tmux.conf".source = "${dotfiles}/tmux/.tmux.conf";
-          ".tmux".source = "${dotfiles}/tmux/.tmux";
-
-          # VIM.
-          ".vimrc".source = "${dotfiles}/vim/.vimrc";
-          ".vim".source = "${dotfiles}/vim/.vim";
-
-          # VS Code.
-          ".config/Code/User/settings.json".source = "${dotfiles}/vscode/settings.json";
-          ".config/Code/User/snippets".source = "${dotfiles}/vscode/snippets";
-
-          # Yarn.
-          ".yarnrc".source = "${dotfiles}/yarn/.yarnrc";
-
-          # ZSH.
-          ".zshrc".source = "${dotfiles}/zsh/.zshrc";
-          ".zsh".source = "${dotfiles}/zsh/.zsh";
-          ".oh-my-zsh".source = "${dotfiles}/zsh/.oh-my-zsh";
-          ".oh-my-zsh-custom".source = "${dotfiles}/zsh/.oh-my-zsh-custom";
+        root = {
+          home.file = files;
         };
       }
   );
