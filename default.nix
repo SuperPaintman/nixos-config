@@ -46,8 +46,12 @@ in
     # Terminals.
     xst
 
-    # Compilers and interpreters.
+    # Compilers, interpreters and dev packages.
+    clang
+    gcc
+    cmake
     go
+    nodejs
 
     # Games.
     steam
