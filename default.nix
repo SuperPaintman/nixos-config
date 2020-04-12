@@ -53,6 +53,10 @@ in
     go
     nodejs
 
+    # Server configuration utils.
+    ansible
+    terraform
+
     # Games.
     steam
 
