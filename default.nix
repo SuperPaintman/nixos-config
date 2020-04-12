@@ -66,6 +66,7 @@ in
 
     # Misc.
     dbeaver # Universal SQL client.
+    obs-studio # Streaming and recording program.
     nixpkgs-fmt
   ];
 
