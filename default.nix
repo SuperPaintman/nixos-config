@@ -49,6 +49,9 @@ in
     # Compilers and interpreters.
     go
 
+    # Games.
+    steam
+
     # Misc.
     nixpkgs-fmt
   ];
@@ -67,9 +70,15 @@ in
 
   # Hardware.
   hardware = {
-    pulseaudio.enable = true; # Enable the PulseAudio sound server.
+    pulseaudio = {
+      enable = true; # Enable the PulseAudio sound server.
+      support32Bit = true;
+    };
 
-    opengl.enable = true; # TODO(SuperPaintman): enable it only on Sequoia.
+    opengl = {
+      enable = true; # TODO(SuperPaintman): enable it only on Sequoia.
+      driSupport32Bit = true;
+    };
   };
 
   # Services.
