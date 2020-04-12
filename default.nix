@@ -29,6 +29,7 @@ in
     jq
     tmux
     unzip
+    unrar
     xclip
 
     # Shells.
