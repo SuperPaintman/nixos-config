@@ -43,6 +43,7 @@ in
 
     # Browsers.
     firefox
+    chromium
 
     # Terminals.
     xst
