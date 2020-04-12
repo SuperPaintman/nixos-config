@@ -53,6 +53,10 @@ in
     go
     nodejs
 
+    # Docker.
+    docker
+    docker-compose
+
     # Server configuration utils.
     ansible
     terraform
@@ -101,13 +105,16 @@ in
     videoDrivers = [ "nvidia" ]; # TODO(SuperPaintman): enable it only on Sequoia.
   };
 
+  # Virtualisation.
+  virtualisation.docker.enable = true;
+
   # Users.
   users.defaultUserShell = pkgs.fish;
 
   users.users.superpaintman = {
     isNormalUser = true;
     uid = 1000;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "docker" ];
     shell = pkgs.fish;
   };
 
