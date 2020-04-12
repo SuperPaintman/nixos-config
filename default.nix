@@ -53,6 +53,8 @@ in
     cmake
     go
     nodejs
+    python3
+    ruby
 
     # Docker.
     docker
