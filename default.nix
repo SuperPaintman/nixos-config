@@ -1,4 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, ... }@args:
+
+let
+  localPkgs = import ./pkgs args;
+in
 {
   # Boot.
   boot.cleanTmpDir = true; # Delete all files in `/tmp` during boot.
@@ -88,5 +92,24 @@
     uid = 1000;
     extraGroups = [ "wheel" ];
     shell = pkgs.fish;
+  };
+
+  # Fonts.
+  fonts = {
+    enableFontDir = true;
+    enableGhostscriptFonts = true;
+
+    fonts = with pkgs; [
+      ubuntu_font_family
+      dejavu_fonts
+      fira-code
+
+      localPkgs.jetbrains-mono
+    ];
+
+    fontconfig.defaultFonts = {
+      sansSerif = [ "Ubuntu" ];
+      monospace = [ "JetBrains Mono" ];
+    };
   };
 }
