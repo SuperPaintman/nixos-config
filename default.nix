@@ -126,13 +126,13 @@ in
   virtualisation.docker.enable = true;
 
   # Users.
-  users.defaultUserShell = pkgs.fish;
+  users.defaultUserShell = pkgs.zsh;
 
   users.users.superpaintman = {
     isNormalUser = true;
     uid = 1000;
     extraGroups = [ "wheel" "docker" ];
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
   };
 
   # Home Manager.
