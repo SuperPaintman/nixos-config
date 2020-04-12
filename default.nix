@@ -2,8 +2,24 @@
 
 let
   localPkgs = import ./pkgs args;
+
+  home-manager = builtins.fetchGit {
+    url = "https://github.com/rycee/home-manager.git";
+    rev = "b78b5fa4a073dfcdabdf0deb9a8cfd56050113be";
+    ref = "release-19.09";
+  };
+
+  # TODO(SuperPaintman): fetch submodules.
+  dotfiles = builtins.fetchGit {
+    url = "https://github.com/SuperPaintman/dotfiles";
+  };
 in
 {
+  # Imports.
+  imports = [
+    (import "${home-manager}/nixos")
+  ];
+
   # Boot.
   boot.cleanTmpDir = true; # Delete all files in `/tmp` during boot.
 
@@ -122,6 +138,52 @@ in
     uid = 1000;
     extraGroups = [ "wheel" "docker" ];
     shell = pkgs.fish;
+  };
+
+  # Home Manager.
+  home-manager.users.superpaintman =  {
+    home.file = {
+      # Dotfiles.
+      ".dotfiles".source = dotfiles;
+
+      # Bash.
+      ".bashrc".source = "${dotfiles}/bash/.bashrc";
+      ".bash_profile".source = "${dotfiles}/bash/.bash_profile";
+      ".bash".source = "${dotfiles}/bash/.bash";
+
+      # Git.
+      ".gitconfig".source = "${dotfiles}/git/.gitconfig";
+
+      # Htop.
+      ".config/htop/htoprc".source = "${dotfiles}/htop/htoprc";
+
+      # NPM.
+      ".npmrc".source = "${dotfiles}/npm/.npmrc";
+
+      # Prettier.
+      ".prettierrc.js".source = "${dotfiles}/prettier/.prettierrc.js";
+
+      # TMUX.
+      ".tmux.conf".source = "${dotfiles}/tmux/.tmux.conf";
+      ".tmux".source = "${dotfiles}/tmux/.tmux";
+
+      # VIM.
+      ".vimrc".source = "${dotfiles}/vim/.vimrc";
+      ".vim".source = "${dotfiles}/vim/.vim";
+
+      # VS Code.
+      ".config/Code/User/settings.json".source = "${dotfiles}/vscode/settings.json";
+      ".config/Code/User/snippets".source = "${dotfiles}/vscode/snippets";
+
+      # Yarn.
+      ".yarnrc".source = "${dotfiles}/yarn/.yarnrc";
+
+      # ZSH.
+      ".zshrc".source = "${dotfiles}/zsh/.zshrc";
+      ".zsh".source = "${dotfiles}/zsh/.zsh";
+      ".oh-my-zsh".source = "${dotfiles}/zsh/.oh-my-zsh";
+      ".oh-my-zsh-custom".source = "${dotfiles}/zsh/.oh-my-zsh-custom";
+    };
   };
 
   # Fonts.
