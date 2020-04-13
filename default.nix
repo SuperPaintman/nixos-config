@@ -1,4 +1,4 @@
-{ pkgs, ... }@args:
+{ pkgs, lib, ... }@args:
 
 let
   localPkgs = import ./pkgs args;
@@ -150,48 +150,13 @@ in
         )
       );
 
-      files = {
-        # Dotfiles.
-        ".dotfiles".source = dotfiles;
-
-        # Bash.
-        ".bashrc".source = "${dotfiles}/bash/.bashrc";
-        ".bash_profile".source = "${dotfiles}/bash/.bash_profile";
-        ".bash".source = "${dotfiles}/bash/.bash";
-
-        # Git.
-        ".gitconfig".source = "${dotfiles}/git/.gitconfig";
-
-        # Htop.
-        ".config/htop/htoprc".source = "${dotfiles}/htop/htoprc";
-
-        # NPM.
-        ".npmrc".source = "${dotfiles}/npm/.npmrc";
-
-        # Prettier.
-        ".prettierrc.js".source = "${dotfiles}/prettier/.prettierrc.js";
-
-        # TMUX.
-        ".tmux.conf".source = "${dotfiles}/tmux/.tmux.conf";
-        ".tmux".source = "${dotfiles}/tmux/.tmux";
-
-        # VIM.
-        ".vimrc".source = "${dotfiles}/vim/.vimrc";
-        ".vim".source = "${dotfiles}/vim/.vim";
-
-        # VS Code.
-        ".config/Code/User/settings.json".source = "${dotfiles}/vscode/settings.json";
-        ".config/Code/User/snippets".source = "${dotfiles}/vscode/snippets";
-
-        # Yarn.
-        ".yarnrc".source = "${dotfiles}/yarn/.yarnrc";
-
-        # ZSH.
-        ".zshrc".source = "${dotfiles}/zsh/.zshrc";
-        ".zsh".source = "${dotfiles}/zsh/.zsh";
-        ".oh-my-zsh".source = "${dotfiles}/zsh/.oh-my-zsh";
-        ".oh-my-zsh-custom".source = "${dotfiles}/zsh/.oh-my-zsh-custom";
-      };
+      files = lib.mkMerge [
+        (import dotfiles)
+        # {
+        #   # Dotfiles.
+        #   ".dotfiles".source = dotfiles;
+        # }
+      ];
     in
       {
         superpaintman = {
