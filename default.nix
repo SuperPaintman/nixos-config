@@ -43,6 +43,10 @@ in
     unrar
     xclip
 
+    # Replacements for basic utils.
+    exa # ls
+    bat # cat
+
     # Shells.
     bash
     fish
