@@ -71,6 +71,7 @@ in
     nodejs
     python3
     ruby
+    shfmt
 
     # Docker.
     docker
