@@ -67,7 +67,7 @@ in
     clang
     gcc
     cmake
-    go
+    localPkgs.go
     nodejs
     python3
     ruby
