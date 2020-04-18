@@ -67,7 +67,13 @@ in
     clang
     gcc
     cmake
+    llvm
     localPkgs.go
+    gotools
+    godef
+    go-outline
+    gomodifytags
+    impl
     nodejs
     python3
     ruby
