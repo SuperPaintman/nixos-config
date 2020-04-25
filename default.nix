@@ -60,15 +60,20 @@ in
     firefox
     chromium
 
+    # Messengers.
+    localPkgs.tdesktop # Telegram.
+
     # Terminals.
     xst
 
     # Compilers, interpreters and dev packages.
+    gnumake
     clang
+    clang-tools
     gcc
     cmake
     llvm
-    localPkgs.go
+    go
     gotools
     godef
     go-outline
@@ -78,6 +83,8 @@ in
     python3
     ruby
     shfmt
+    nixpkgs-fmt
+    arduino
 
     # Docker.
     docker
@@ -93,7 +100,6 @@ in
     # Misc.
     dbeaver # Universal SQL client.
     obs-studio # Streaming and recording program.
-    nixpkgs-fmt
   ];
 
   # Programs.
@@ -196,7 +202,7 @@ in
       dejavu_fonts
       fira-code
 
-      localPkgs.jetbrains-mono
+      jetbrains-mono
     ];
 
     fontconfig.defaultFonts = {
