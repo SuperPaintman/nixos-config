@@ -42,6 +42,7 @@ in
     unzip
     unrar
     xclip
+    bind # dig
 
     # Replacements for basic utils.
     exa # ls
@@ -138,6 +139,25 @@ in
 
     videoDrivers = [ "nvidia" ]; # TODO(SuperPaintman): enable it only on Sequoia.
   };
+
+  services.openvpn.servers = let
+    vpnConfigs = [
+      { name = "server"; config = "/home/superpaintman/.openvpn/server.conf"; }
+    ];
+  in
+    # Merge servicers into one set.
+    lib.mkMerge (
+      # Create VPN service if config file exists.
+      builtins.map (
+        item: lib.mkIf (builtins.pathExists item.config) {
+          "${item.name}" = {
+            config = "config ${item.config}";
+            autoStart = false;
+          };
+        }
+      ) vpnConfigs
+    )
+  ;
 
   # Virtualisation.
   virtualisation.docker.enable = true;
