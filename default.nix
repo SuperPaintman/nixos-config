@@ -47,6 +47,7 @@ in
     # Replacements for basic utils.
     exa # ls
     bat # cat
+    fd # find
 
     # Shells.
     bash
@@ -63,6 +64,7 @@ in
 
     # Messengers.
     localPkgs.tdesktop # Telegram.
+    discord
 
     # Terminals.
     xst
@@ -83,6 +85,7 @@ in
     nodejs
     python3
     ruby
+    rustup
     shfmt
     nixpkgs-fmt
     arduino
@@ -99,6 +102,8 @@ in
     steam
 
     # Misc.
+    tldr # Simple man pages.
+    lf # Terminal file manager.
     feh # Image viewer.
     dbeaver # Universal SQL client.
     obs-studio # Streaming and recording program.
