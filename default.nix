@@ -99,6 +99,7 @@ in
     steam
 
     # Misc.
+    feh # Image viewer.
     dbeaver # Universal SQL client.
     obs-studio # Streaming and recording program.
   ];
