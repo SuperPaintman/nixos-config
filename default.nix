@@ -8,6 +8,11 @@ let
     rev = "b78b5fa4a073dfcdabdf0deb9a8cfd56050113be";
     ref = "release-19.09";
   };
+
+  # Check if config file exists.
+  vpnConfigs = builtins.filter (item: builtins.pathExists item.config) [
+    { name = "server"; config = "/home/superpaintman/.openvpn/server.conf"; }
+  ];
 in
 {
   # Imports.
@@ -148,24 +153,18 @@ in
     videoDrivers = [ "nvidia" ]; # TODO(SuperPaintman): enable it only on Sequoia.
   };
 
-  services.openvpn.servers = let
-    vpnConfigs = [
-      { name = "server"; config = "/home/superpaintman/.openvpn/server.conf"; }
-    ];
-  in
+  services.openvpn.servers =
     # Merge servicers into one set.
     lib.mkMerge (
-      # Create VPN service if config file exists.
       builtins.map (
-        item: lib.mkIf (builtins.pathExists item.config) {
+        item: {
           "${item.name}" = {
             config = "config ${item.config}";
             autoStart = false;
           };
         }
       ) vpnConfigs
-    )
-  ;
+    );
 
   # Virtualisation.
   virtualisation.docker.enable = true;
@@ -178,6 +177,39 @@ in
     uid = 1000;
     extraGroups = [ "wheel" "docker" ];
     shell = pkgs.zsh;
+  };
+
+  # Security.
+  security.sudo = {
+    enable = true;
+
+    # Always ask password.
+    wheelNeedsPassword = true;
+
+    extraConfig = let
+      vpnServices = builtins.map (item: item.name) vpnConfigs;
+      vpnCommands = [ "start" "stop" "restart" "status" ];
+    in
+      ''
+        # No password for `nixos-rebuild`.
+        # %wheel ALL=(ALL:ALL) NOPASSWD: /run/current-system/sw/bin/nixos-rebuild switch
+
+        # VPN.
+        ${lib.concatStringsSep "\n" (
+        lib.lists.flatten (
+          builtins.map (
+            name: (
+              [ "# openvpn-${name}.service." ]
+              ++ (
+                builtins.map (
+                  command: "%wheel ALL=(ALL:ALL) NOPASSWD: ${pkgs.systemd}/bin/systemctl ${command} openvpn-${name}.service"
+                ) vpnCommands
+              )
+            )
+          ) vpnServices
+        )
+      )}
+      '';
   };
 
   # Home Manager.
