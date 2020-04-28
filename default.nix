@@ -102,9 +102,11 @@ in
     steam
 
     # Misc.
+    (polybar.override { pulseSupport = true; })
     tldr # Simple man pages.
     lf # Terminal file manager.
     feh # Image viewer.
+    pavucontrol # PulseAudio Volume Control.
     dbeaver # Universal SQL client.
     obs-studio # Streaming and recording program.
   ];
@@ -227,7 +229,8 @@ in
       ubuntu_font_family
       dejavu_fonts
       fira-code
-
+      font-awesome-ttf
+      siji
       jetbrains-mono
     ];
 
