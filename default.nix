@@ -1,3 +1,5 @@
+# See: https://nixos.org/nixos/options.html#
+
 { pkgs, lib, ... }@args:
 
 let
