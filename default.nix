@@ -155,6 +155,13 @@ in
     videoDrivers = [ "nvidia" ]; # TODO(SuperPaintman): enable it only on Sequoia.
   };
 
+  services.picom = {
+    enable = true;
+    backend = "glx";
+    shadow = true;
+    vSync = true;
+  };
+
   services.openvpn.servers =
     # Merge servicers into one set.
     lib.mkMerge (
