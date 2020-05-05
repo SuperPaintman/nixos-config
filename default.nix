@@ -112,6 +112,7 @@ in
     (polybar.override { pulseSupport = true; })
     tldr # Simple man pages.
     lf # Terminal file manager.
+    rofi # Window switcher, application launcher and dmenu replacement.
     feh # Image viewer.
     pavucontrol # PulseAudio Volume Control.
     dbeaver # Universal SQL client.
@@ -153,6 +154,10 @@ in
     desktopManager.plasma5.enable = true;
 
     videoDrivers = [ "nvidia" ]; # TODO(SuperPaintman): enable it only on Sequoia.
+
+    displayManager.sessionCommands = with pkgs; ''
+      ${xorg.xrdb}/bin/xrdb -load ~/.Xresources
+    '';
   };
 
   services.picom = {
