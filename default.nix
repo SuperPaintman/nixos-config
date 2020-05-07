@@ -224,6 +224,9 @@ in
           ) vpnServices
         )
       )}
+
+        # Arduino.
+        %wheel ALL=(ALL:ALL) NOPASSWD: ${pkgs.arduino}/bin/arduino
       '';
   };
 
