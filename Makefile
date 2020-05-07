@@ -13,7 +13,7 @@ switch:
 	@sudo nixos-rebuild switch
 
 gc:
-	@nix-collect-garbage -d
+	@sudo nix-collect-garbage -d
 
 format:
 	@nixpkgs-fmt $(NIX_FILES)
