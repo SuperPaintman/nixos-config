@@ -23,3 +23,6 @@ format:
 channels:
 	@sudo nix-channel --add "https://nixos.org/channels/nixos-$(NIXOS_VERSION)" nixos
 	@sudo nix-channel --list
+
+uninstall-users-packages:
+	@nix-env --uninstall $$(nix-env -q)
