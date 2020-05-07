@@ -114,6 +114,7 @@ in
     lf # Terminal file manager.
     rofi # Window switcher, application launcher and dmenu replacement.
     feh # Image viewer.
+    arandr # Visual front end for XRandR.
     pavucontrol # PulseAudio Volume Control.
     dbeaver # Universal SQL client.
     obs-studio # Streaming and recording program.
