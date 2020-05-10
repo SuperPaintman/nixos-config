@@ -74,6 +74,7 @@ in
     discord
 
     # Terminals.
+    alacritty
     xst
 
     # Compilers, interpreters and dev packages.
