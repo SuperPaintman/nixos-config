@@ -150,16 +150,31 @@ in
   services.xserver = {
     enable = true;
 
-    displayManager.sddm.enable = true;
+    # Keyboard.
+    layout = lib.concatStringsSep "," [ "us" "ru" ];
+    xkbOptions = lib.concatStringsSep "," [
+      "caps:escape" # Caps Lock as Ctrl.
+    ];
+
+    # Display, desktop and window managers.
+    displayManager.sddm = {
+      enable = true;
+      autoNumlock = true;
+    };
 
     desktopManager.xterm.enable = false;
     desktopManager.plasma5.enable = true;
 
-    videoDrivers = [ "nvidia" ]; # TODO(SuperPaintman): enable it only on Sequoia.
-
     displayManager.sessionCommands = with pkgs; ''
+      # Load X resources.
       ${xorg.xrdb}/bin/xrdb -load ~/.Xresources
+
+      # Turn NumLock on.
+      ${numlockx}/bin/numlockx on
     '';
+
+    # Misc.
+    videoDrivers = [ "nvidia" ]; # TODO(SuperPaintman): enable it only on Sequoia.
   };
 
   services.picom = {
