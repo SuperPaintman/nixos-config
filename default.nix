@@ -154,6 +154,8 @@ in
     layout = lib.concatStringsSep "," [ "us" "ru" ];
     xkbOptions = lib.concatStringsSep "," [
       "caps:escape" # Caps Lock as Ctrl.
+      "grp:alt_shift_toggle" # Toggle layout.
+      "grp_led:caps" # Use led as indicator.
     ];
 
     # Display, desktop and window managers.
