@@ -167,6 +167,8 @@ in
     desktopManager.xterm.enable = false;
     desktopManager.plasma5.enable = true;
 
+    windowManager.awesome.enable = true;
+
     displayManager.sessionCommands = with pkgs; ''
       # Load X resources.
       ${xorg.xrdb}/bin/xrdb -load ~/.Xresources
