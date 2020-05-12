@@ -91,7 +91,13 @@ in
     gomodifytags
     impl
     nodejs
-    python3
+    (
+      python3.withPackages (
+        packages: with packages; [
+          telethon
+        ]
+      )
+    )
     ruby
     rustup
     shfmt
