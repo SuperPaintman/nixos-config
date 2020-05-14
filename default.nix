@@ -308,6 +308,7 @@ in
       font-awesome-ttf
       siji
       jetbrains-mono
+      helvetica-neue-lt-std
     ];
 
     fontconfig.defaultFonts = {
