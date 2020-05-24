@@ -144,11 +144,17 @@ in
     pulseaudio = {
       enable = true; # Enable the PulseAudio sound server.
       support32Bit = true;
+      package = pkgs.pulseaudioFull;
     };
 
     opengl = {
       enable = true; # TODO(SuperPaintman): enable it only on Sequoia.
       driSupport32Bit = true;
+    };
+
+    bluetooth = {
+      enable = true;
+      package = pkgs.bluezFull;
     };
   };
 
@@ -193,6 +199,8 @@ in
     shadow = true;
     vSync = true;
   };
+
+  services.blueman.enable = true;
 
   services.openvpn.servers =
     # Merge servicers into one set.
