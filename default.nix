@@ -46,6 +46,7 @@ in
     git
     jq
     tmux
+    zip
     unzip
     unrar
     xclip
