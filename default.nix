@@ -73,6 +73,7 @@ in
     # Messengers.
     localPkgs.tdesktop # Telegram.
     discord
+    skypeforlinux
 
     # Terminals.
     alacritty
