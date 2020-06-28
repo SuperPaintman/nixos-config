@@ -93,6 +93,7 @@ in
     gomodifytags
     impl
     nodejs
+    python
     (
       python3.withPackages (
         packages: with packages; [
