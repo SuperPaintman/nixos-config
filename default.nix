@@ -128,6 +128,7 @@ in
     pavucontrol # PulseAudio Volume Control.
     dbeaver # Universal SQL client.
     obs-studio # Streaming and recording program.
+    audacity # Sound editor with graphical UI
   ];
 
   # Programs.
