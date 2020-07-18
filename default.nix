@@ -103,6 +103,9 @@ in
     )
     ruby
     rustup
+    ghc
+    stack
+    haskellPackages.brittany
     shfmt
     nixpkgs-fmt
     arduino
