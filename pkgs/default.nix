@@ -11,5 +11,7 @@ with pkgs; rec {
     recurseIntoAttrs (callPackage ./development/compilers/flutter {});
   flutter = flutterPackages.stable;
 
+  dart = callPackage ./development/interpreters/dart {};
+
   tl-expected = callPackage ./development/libraries/tl-expected {};
 }

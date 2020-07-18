@@ -106,7 +106,7 @@ in
     ghc
     stack
     haskellPackages.brittany
-    dart
+    localPkgs.dart
     localPkgs.flutter
     shfmt
     nixpkgs-fmt
