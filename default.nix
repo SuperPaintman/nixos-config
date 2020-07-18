@@ -174,7 +174,7 @@ in
     # Keyboard.
     layout = lib.concatStringsSep "," [ "us" "ru" ];
     xkbOptions = lib.concatStringsSep "," [
-      "caps:escape" # Caps Lock as Ctrl.
+      "caps:escape" # Caps Lock as Escape.
       "grp:alt_shift_toggle" # Toggle layout.
       "grp_led:caps" # Use led as indicator.
     ];
