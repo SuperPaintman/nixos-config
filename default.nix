@@ -106,6 +106,8 @@ in
     ghc
     stack
     haskellPackages.brittany
+    dart
+    localPkgs.flutter
     shfmt
     nixpkgs-fmt
     arduino

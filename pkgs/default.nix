@@ -7,5 +7,9 @@ with pkgs; rec {
   };
 
   # Development.
+  flutterPackages =
+    recurseIntoAttrs (callPackage ./development/compilers/flutter {});
+  flutter = flutterPackages.stable;
+
   tl-expected = callPackage ./development/libraries/tl-expected {};
 }
