@@ -128,6 +128,7 @@ in
     (polybar.override { pulseSupport = true; })
     tldr # Simple man pages.
     lf # Terminal file manager.
+    fzf # A command-line fuzzy finder written in Go.
     rofi # Window switcher, application launcher and dmenu replacement.
     feh # Image viewer.
     arandr # Visual front end for XRandR.
