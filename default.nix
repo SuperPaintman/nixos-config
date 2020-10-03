@@ -51,6 +51,7 @@ in
     unrar
     xclip
     bind # dig
+    wirelesstools
 
     # Replacements for basic utils.
     exa # ls
@@ -133,7 +134,9 @@ in
     pavucontrol # PulseAudio Volume Control.
     dbeaver # Universal SQL client.
     obs-studio # Streaming and recording program.
-    audacity # Sound editor with graphical UI
+    audacity # Sound editor with graphical UI.
+    scrot # A command-line screen capture utility.
+    libnotify # A library that sends desktop notifications to a notification daemon.
   ];
 
   # Programs.
