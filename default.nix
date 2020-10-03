@@ -129,6 +129,7 @@ in
     tldr # Simple man pages.
     lf # Terminal file manager.
     fzf # A command-line fuzzy finder written in Go.
+    ripgrep # A utility that combines the usability of The Silver Searcher with the raw speed of grep.
     rofi # Window switcher, application launcher and dmenu replacement.
     feh # Image viewer.
     arandr # Visual front end for XRandR.
