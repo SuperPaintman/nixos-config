@@ -11,6 +11,19 @@ let
     ref = "release-19.09";
   };
 
+  dotfiles = let
+    localDotfilesRepo = /home/superpaintman/Projects/github.com/SuperPaintman/dotfiles;
+  in
+    # Use local copy of Dotfile if we have one.
+    if builtins.pathExists localDotfilesRepo
+    then localDotfilesRepo
+    else (
+      # TODO(SuperPaintman): fetch submodules.
+      builtins.fetchGit {
+        url = "https://github.com/SuperPaintman/dotfiles";
+      }
+    );
+
   # Check if config file exists.
   vpnConfigs = builtins.filter (item: builtins.pathExists item.config) [
     { name = "server"; config = "/home/superpaintman/.openvpn/server.conf"; }
@@ -65,7 +78,17 @@ in
 
     # Editors.
     vim
-    vscode
+    (
+      vscode-with-extensions.override {
+        vscodeExtensions = let
+          vscodeExtensionsFile = "${dotfiles}/vscode/extensions.nix";
+        in
+          if builtins.pathExists vscodeExtensionsFile
+          then (import vscodeExtensionsFile args)
+          else [];
+      }
+    )
+    android-studio
 
     # Browsers.
     firefox
@@ -281,18 +304,6 @@ in
   # Home Manager.
   home-manager.users = (
     let
-      dotfiles = (
-        # Use local copy of Dotfile if we have one.
-        if builtins.pathExists /home/superpaintman/Projects/github.com/SuperPaintman/dotfiles
-        then /home/superpaintman/Projects/github.com/SuperPaintman/dotfiles
-        else (
-          # TODO(SuperPaintman): fetch submodules.
-          builtins.fetchGit {
-            url = "https://github.com/SuperPaintman/dotfiles";
-          }
-        )
-      );
-
       files = lib.mkMerge [
         (import dotfiles)
         # {
