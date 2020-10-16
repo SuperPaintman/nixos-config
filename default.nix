@@ -38,6 +38,11 @@ in
   # Boot.
   boot.cleanTmpDir = true; # Delete all files in `/tmp` during boot.
 
+  # TODO(SuperPaintman): it doesn't work with my wifi stick :(.
+  # boot.extraModulePackages = with config.boot.kernelPackages; [
+  #   rtl8812au # WiFi driver.
+  # ];
+
   # Nix.
   nix.trustedUsers = [ "root" "@wheel" ];
 
