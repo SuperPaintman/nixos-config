@@ -54,7 +54,7 @@ in
   networking.networkmanager.enable = true;
 
   # Environment.
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; lib.lists.flatten [
     # Basic packages.
     coreutils
     wget
@@ -131,7 +131,33 @@ in
       )
     )
     ruby
-    rustup
+    (
+      # Fix Rust's OpenSSL problem.
+      # See: https://discourse.nixos.org/t/openssl-dependency-for-rust/3186
+      builtins.map (
+        item: writeScriptBin item ''
+          #!${stdenv.shell}
+          export OPENSSL_INCLUDE_DIR="${openssl.dev}/include"
+          export OPENSSL_LIB_DIR="${openssl.out}/lib"
+          export OPENSSL_ROOT_DIR="${openssl.out}"
+
+          ${rustup}/bin/${item} $@
+        ''
+      ) [
+        "cargo"
+        "cargo-clippy"
+        "cargo-fmt"
+        "cargo-miri"
+        "clippy-driver"
+        "rls"
+        "rust-gdb"
+        "rust-lldb"
+        "rustc"
+        "rustdoc"
+        "rustfmt"
+        "rustup"
+      ]
+    )
     ghc
     stack
     haskellPackages.brittany
