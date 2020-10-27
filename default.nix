@@ -378,9 +378,14 @@ in
         # enable local editing.
         (
           let
-            d = import dotfiles;
+            # Support old dotfiles format.
+            callIfFunction = f: args: if builtins.isFunction f then (f args) else f;
+
+            dotfilesFiles = callIfFunction (import dotfiles) {
+              isMacOS = pkgs.stdenv.hostPlatform.isMacOS;
+            };
           in
-            if hasLocalDotfilesRepo then (filesToSymlinks d {}) else d
+            if hasLocalDotfilesRepo then (filesToSymlinks dotfilesFiles {}) else dotfilesFiles
         )
         # {
         #   # Dotfiles.
