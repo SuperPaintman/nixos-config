@@ -342,6 +342,22 @@ in
         #   ".dotfiles".source = dotfiles;
         # }
       ];
+
+      fileSourceToLink = name: source: {
+        source = "${pkgs.runCommand "symlink-dotfiles" {} ''
+          mkdir -p $out/$(dirname ${name})
+          echo source = ${toString source}
+          echo name = ${name}
+          echo dir = $(dirname ${name})
+          ln -s ${toString source} $out/${name}
+        ''}/${name}";
+      };
+
+      fileToLink = name: file: if lib.hasAttr "source" file then (fileSourceToLink name file.source) else file;
+
+      filesToLinks' = files: lib.mapAttrs fileToLink files;
+
+      filesToLinks = filesList: lib.mkMerge (builtins.map filesToLinks' (lib.dischargeProperties filesList));
     in
       {
         superpaintman = {
@@ -351,11 +367,11 @@ in
           #   ".dotfiles"
           # ] files;
 
-          home.file = files;
+          home.file = filesToLinks files;
         };
 
         root = {
-          home.file = files;
+          home.file = filesToLinks files;
         };
       }
   );
