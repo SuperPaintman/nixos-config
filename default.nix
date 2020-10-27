@@ -11,18 +11,21 @@ let
     ref = "release-19.09";
   };
 
-  dotfiles = let
-    localDotfilesRepo = /home/superpaintman/Projects/github.com/SuperPaintman/dotfiles;
-  in
+  localDotfilesRepo = /home/superpaintman/Projects/github.com/SuperPaintman/dotfiles;
+
+  hasLocalDotfilesRepo = builtins.pathExists localDotfilesRepo;
+
+  dotfiles = (
     # Use local copy of Dotfile if we have one.
-    if builtins.pathExists localDotfilesRepo
+    if hasLocalDotfilesRepo
     then localDotfilesRepo
     else (
       # TODO(SuperPaintman): fetch submodules.
       builtins.fetchGit {
         url = "https://github.com/SuperPaintman/dotfiles";
       }
-    );
+    )
+  );
 
   # Check if config file exists.
   vpnConfigs = builtins.filter (item: builtins.pathExists item.config) [
@@ -335,29 +338,55 @@ in
   # Home Manager.
   home-manager.users = (
     let
+      mkDonfilesSymlinks = files: pkgs.runCommand "symlink-dotfiles" {} ''
+        # Hello there.
+        ${lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (
+          name: file: ''
+            # ${name}.
+            mkdir -p $out/$(dirname ${name})
+            ln -s ${toString file.source} $out/${name}
+          ''
+        ) files
+      )}
+      '';
+
+      filesToSymlinks = files: { ignore ? [] }:
+        let
+          checkIsSymlink = n: v:
+            (lib.hasAttr "source" v) && (lib.all (re: builtins.match re n == null) ignore);
+
+          groups = {
+            symlinks = lib.filterAttrs (n: v: checkIsSymlink n v) files;
+            rest = lib.filterAttrs (n: v: !(checkIsSymlink n v)) files;
+          };
+
+          replaceWithSymlinks = files:
+            let
+              symlinks = mkDonfilesSymlinks files;
+            in
+              lib.mapAttrs (
+                n: v: {
+                  source = "${symlinks}/${n}";
+                }
+              ) files;
+        in
+          (replaceWithSymlinks groups.symlinks) // groups.rest;
+
       files = lib.mkMerge [
-        (import dotfiles)
+        # Make symlinks to local dotfiles instead of nix derivatives to
+        # enable local editing.
+        (
+          let
+            d = import dotfiles;
+          in
+            if hasLocalDotfilesRepo then (filesToSymlinks d {}) else d
+        )
         # {
         #   # Dotfiles.
         #   ".dotfiles".source = dotfiles;
         # }
       ];
-
-      fileSourceToLink = name: source: {
-        source = "${pkgs.runCommand "symlink-dotfiles" {} ''
-          mkdir -p $out/$(dirname ${name})
-          echo source = ${toString source}
-          echo name = ${name}
-          echo dir = $(dirname ${name})
-          ln -s ${toString source} $out/${name}
-        ''}/${name}";
-      };
-
-      fileToLink = name: file: if lib.hasAttr "source" file then (fileSourceToLink name file.source) else file;
-
-      filesToLinks' = files: lib.mapAttrs fileToLink files;
-
-      filesToLinks = filesList: lib.mkMerge (builtins.map filesToLinks' (lib.dischargeProperties filesList));
     in
       {
         superpaintman = {
@@ -367,11 +396,11 @@ in
           #   ".dotfiles"
           # ] files;
 
-          home.file = filesToLinks files;
+          home.file = files;
         };
 
         root = {
-          home.file = filesToLinks files;
+          home.file = files;
         };
       }
   );
