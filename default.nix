@@ -339,7 +339,6 @@ in
   home-manager.users = (
     let
       mkDonfilesSymlinks = files: pkgs.runCommand "symlink-dotfiles" {} ''
-        # Hello there.
         ${lib.concatStringsSep "\n" (
         lib.mapAttrsToList (
           name: file: ''
