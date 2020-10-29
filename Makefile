@@ -15,6 +15,14 @@ update: channels
 switch:
 	@sudo nixos-rebuild switch
 
+.PHONY: build
+build:
+	nixos-rebuild build
+
+.PHONY: dry-build
+dry-build:
+	nixos-rebuild dry-build
+
 .PHONY: gc
 gc:
 	@sudo nix-collect-garbage -d
@@ -33,3 +41,7 @@ channels:
 .PHONY: uninstall-users-packages
 uninstall-users-packages:
 	@nix-env --uninstall $$(nix-env -q)
+
+.PHONY: clean
+clean:
+	@rm -f result
