@@ -57,6 +57,17 @@ in
   networking.networkmanager.enable = true;
 
   # Environment.
+  environment.sessionVariables = {
+    XDG_CONFIG_HOME = "$HOME/.config";
+    XDG_CACHE_HOME = "$HOME/.cache";
+    XDG_DATA_HOME = "$HOME/.local/share";
+    XDG_BIN_HOME = "$HOME/.local/bin";
+  };
+
+  environment.extraInit = ''
+    export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+  '';
+
   environment.systemPackages = with pkgs; lib.lists.flatten [
     # Basic packages.
     coreutils
@@ -372,39 +383,63 @@ in
         in
           (replaceWithSymlinks groups.symlinks) // groups.rest;
 
-      files = lib.mkMerge [
+      files =
         # Make symlinks to local dotfiles instead of nix derivatives to
         # enable local editing.
-        (
-          let
-            # Support old dotfiles format.
-            callIfFunction = f: args: if builtins.isFunction f then (f args) else f;
+        let
+          # Support old dotfiles format.
+          callIfFunction = f: args: if builtins.isFunction f then (f args) else f;
 
-            dotfilesFiles = callIfFunction (import dotfiles) {
+          defaultAttr = name: def: v: if builtins.hasAttr name v then v."${name}" else def;
+
+          convertNewFormat = v: (
+            if builtins.hasAttr "file" v || builtins.hasAttr "configFile" v || builtins.hasAttr "dataFile" v
+            then
+              {
+                file = defaultAttr "file" {} v;
+                configFile = defaultAttr "configFile" {} v;
+                dataFile = defaultAttr "dataFile" {} v;
+              }
+            else
+              { file = v; configFile = {}; dataFile = {}; }
+          );
+
+          dotfilesFiles = convertNewFormat (
+            callIfFunction (import dotfiles) {
               isMacOS = pkgs.stdenv.hostPlatform.isMacOS;
-            };
-          in
-            if hasLocalDotfilesRepo then (filesToSymlinks dotfilesFiles {}) else dotfilesFiles
-        )
-        # {
-        #   # Dotfiles.
-        #   ".dotfiles".source = dotfiles;
-        # }
-      ];
+              useXDG = true;
+            }
+          );
+
+          filesToSymlinksIfLocal = files: args: (
+            if hasLocalDotfilesRepo
+            then (filesToSymlinks files args)
+            else files
+          );
+        in
+          {
+            file = filesToSymlinksIfLocal dotfilesFiles.file {};
+            configFile = filesToSymlinksIfLocal dotfilesFiles.configFile {};
+            dataFile = filesToSymlinksIfLocal dotfilesFiles.dataFile {};
+          };
     in
       {
         superpaintman = {
-          # Or pick manually.
-          # lib.getAttrs [
-          #   # Dotfiles.
-          #   ".dotfiles"
-          # ] files;
-
-          home.file = files;
+          home.file = files.file;
+          xdg = {
+            enable = true;
+            configFile = files.configFile;
+            dataFile = files.dataFile;
+          };
         };
 
         root = {
-          home.file = files;
+          home.file = files.file;
+          xdg = {
+            enable = true;
+            configFile = files.configFile;
+            dataFile = files.dataFile;
+          };
         };
       }
   );
