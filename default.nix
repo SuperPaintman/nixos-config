@@ -65,7 +65,14 @@ in
   };
 
   environment.extraInit = ''
+    export BASHDOTDIR="$XDG_CONFIG_HOME/bash"
     export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+  '';
+
+  environment.etc."bashrc.local".text = ''
+    if test -f "''${XDG_CONFIG_HOME:-"$HOME/.config"}/bash/bashrc"; then
+        . "''${XDG_CONFIG_HOME:-"$HOME/.config"}/bash/bashrc"
+    fi
   '';
 
   environment.systemPackages = with pkgs; lib.lists.flatten [
