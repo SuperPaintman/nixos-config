@@ -69,11 +69,21 @@ in
     export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
   '';
 
-  environment.etc."bashrc.local".text = ''
-    if test -f "''${XDG_CONFIG_HOME:-"$HOME/.config"}/bash/bashrc"; then
-        . "''${XDG_CONFIG_HOME:-"$HOME/.config"}/bash/bashrc"
-    fi
-  '';
+  environment.etc = {
+    "bashrc.local".text = ''
+      if test -f "''${XDG_CONFIG_HOME:-"$HOME/.config"}/bash/bashrc"; then
+          . "''${XDG_CONFIG_HOME:-"$HOME/.config"}/bash/bashrc"
+      fi
+    '';
+
+    "zshrc.local".text = ''
+      if [ ! -f "$ZDOTDIR/.zshrc" ] && [ -f ~/.zshrc ]; then
+          export ZDOTDIR="$HOME"
+
+          . ~/.zshrc
+      fi
+    '';
+  };
 
   environment.systemPackages = with pkgs; lib.lists.flatten [
     # Basic packages.
