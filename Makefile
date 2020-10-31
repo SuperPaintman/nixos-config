@@ -2,6 +2,21 @@ NIXOS_VERSION := 20.03
 
 NIX_FILES := $(shell find -type f -name '*.nix')
 
+NIX_LOCAL_PACKAGES := $(shell nix eval --raw \
+	'( \
+		with import <nixpkgs> {}; \
+		with lib; \
+		let \
+			pkgs = callPackage ./pkgs/default.nix {}; \
+		in \
+			pipe pkgs [ \
+				attrNames \
+				(filter (n: ! elem n [ "override" "overrideDerivation" ])) \
+				(concatStringsSep " ") \
+			] \
+	)' \
+)
+
 all: channels upgrade
 
 .PHONY: upgrade
@@ -18,6 +33,12 @@ switch:
 .PHONY: build
 build:
 	nixos-rebuild build
+
+.PHONY: $(addprefix build-pkgs-, $(NIX_LOCAL_PACKAGES))
+$(addprefix build-pkgs-, $(NIX_LOCAL_PACKAGES)): build-pkgs-%:
+	@nix-build \
+		-E 'with import <nixpkgs> {}; callPackage ./pkgs/default.nix {}' \
+		-A $*
 
 .PHONY: dry-build
 dry-build:
