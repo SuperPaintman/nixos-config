@@ -40,6 +40,12 @@ $(addprefix build-pkgs-, $(NIX_LOCAL_PACKAGES)): build-pkgs-%:
 		-E 'with import <nixpkgs> {}; callPackage ./pkgs/default.nix {}' \
 		-A $*
 
+.PHONY: $(addprefix shell-pkgs-, $(NIX_LOCAL_PACKAGES))
+$(addprefix shell-pkgs-, $(NIX_LOCAL_PACKAGES)): shell-pkgs-%:
+	@nix-shell \
+		-E 'with import <nixpkgs> {}; callPackage ./pkgs/default.nix {}' \
+		-A $*
+
 .PHONY: dry-build
 dry-build:
 	nixos-rebuild dry-build
