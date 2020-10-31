@@ -16,4 +16,6 @@ with pkgs; rec {
   dart = callPackage ./development/interpreters/dart {};
 
   tl-expected = callPackage ./development/libraries/tl-expected {};
+
+  rustup-openssl = callPackage ./development/tools/rust/rustup-openssl {};
 }
