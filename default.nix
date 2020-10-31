@@ -197,6 +197,7 @@ in
     audacity # Sound editor with graphical UI.
     scrot # A command-line screen capture utility.
     libnotify # A library that sends desktop notifications to a notification daemon.
+    localPkgs._1password # 1Password command-line tool.
   ];
 
   # Programs.

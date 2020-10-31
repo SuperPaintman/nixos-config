@@ -2,6 +2,8 @@
 
 with pkgs; rec {
   # Applications.
+  _1password = callPackage ./applications/misc/1password/default.nix {};
+
   tdesktop = qt5.callPackage ./applications/networking/instant-messengers/telegram/tdesktop {
     inherit tl-expected;
   };
