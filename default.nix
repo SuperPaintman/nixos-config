@@ -73,6 +73,7 @@ in
     xclip
     bind # dig
     wirelesstools
+    lsof
 
     # Replacements for basic utils.
     exa # ls
