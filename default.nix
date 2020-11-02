@@ -362,11 +362,35 @@ in
           in
             if hasLocalDotfilesRepo then (filesToSymlinks dotfilesFiles {}) else dotfilesFiles
         )
-        # {
-        #   # Dotfiles.
-        #   ".dotfiles".source = dotfiles;
-        # }
       ];
+
+      # TODO(SuperPaintman): replace it with nix function in the dotfiles.
+      firefoxFiles = let
+        configPath = ".mozilla/firefox";
+        profileName = "superpaintman";
+        profilePath = "${profileName}.default";
+        optionalFile = path: lib.optionalAttrs (builtins.pathExists "${dotfiles}/firefox/${path}") {
+          "${configPath}/${profilePath}/${path}".source = "${dotfiles}/firefox/${path}";
+        };
+      in
+        filesToSymlinks (
+          {
+            "${configPath}/profiles.ini".text = ''
+              [Profile0]
+              Name=default
+              IsRelative=1
+              Path=${profilePath}
+              Default=1
+
+              [General]
+              StartWithLastProfile=1
+              Version=2
+            '';
+          }
+          // optionalFile "user.js"
+          // optionalFile "chrome/userChrome.css"
+          // optionalFile "chrome/userContent.css"
+        ) {};
     in
       {
         superpaintman = {
@@ -376,11 +400,17 @@ in
           #   ".dotfiles"
           # ] files;
 
-          home.file = files;
+          home.file = lib.mkMerge [
+            files
+            firefoxFiles
+          ];
         };
 
         root = {
-          home.file = files;
+          home.file = lib.mkMerge [
+            files
+            firefoxFiles
+          ];
         };
       }
   );
