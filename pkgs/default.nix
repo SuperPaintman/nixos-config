@@ -8,6 +8,8 @@ with pkgs; rec {
     inherit tl-expected;
   };
 
+  gh = callPackage ./applications/version-management/git-and-tools/gh/default.nix {};
+
   # Development.
   flutterPackages =
     recurseIntoAttrs (callPackage ./development/compilers/flutter {});

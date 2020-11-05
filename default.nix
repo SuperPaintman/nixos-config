@@ -173,6 +173,7 @@ in
     scrot # A command-line screen capture utility.
     libnotify # A library that sends desktop notifications to a notification daemon.
     localPkgs._1password # 1Password command-line tool.
+    localPkgs.gh # GitHub CLI tool.
   ];
 
   # Programs.
