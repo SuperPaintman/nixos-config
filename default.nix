@@ -139,6 +139,7 @@ in
     ghc
     stack
     haskellPackages.brittany
+    elmPackages.elm
     localPkgs.dart
     localPkgs.flutter
     shfmt
