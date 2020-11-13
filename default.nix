@@ -11,6 +11,8 @@ let
     ref = "release-19.09";
   };
 
+  unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
+
   localDotfilesRepo = /home/superpaintman/Projects/github.com/SuperPaintman/dotfiles;
 
   hasLocalDotfilesRepo = builtins.pathExists localDotfilesRepo;
@@ -88,7 +90,7 @@ in
     # Editors.
     vim
     (
-      vscode-with-extensions.override {
+      unstable.vscode-with-extensions.override {
         vscodeExtensions = let
           vscodeExtensionsFile = "${dotfiles}/vscode/extensions.nix";
         in
