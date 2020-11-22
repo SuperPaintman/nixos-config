@@ -158,6 +158,7 @@ in
 
     # Games.
     steam
+    unstable.minecraft
 
     # Misc.
     (polybar.override { pulseSupport = true; })
