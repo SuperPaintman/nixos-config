@@ -2,10 +2,10 @@
 
 with pkgs; rec {
   # Applications.
-  _1password = callPackage ./applications/misc/1password/default.nix {};
+  _1password = callPackage ./applications/misc/1password/default.nix { };
 
-  gh = callPackage ./applications/version-management/git-and-tools/gh/default.nix {};
+  gh = callPackage ./applications/version-management/git-and-tools/gh/default.nix { };
 
   # Development.
-  rustup-openssl = callPackage ./development/tools/rust/rustup-openssl {};
+  rustup-openssl = callPackage ./development/tools/rust/rustup-openssl { };
 }

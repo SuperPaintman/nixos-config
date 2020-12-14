@@ -1,7 +1,6 @@
 # See: https://nixos.org/nixos/options.html#
 
 { pkgs, lib, ... }@args:
-
 let
   localPkgs = import ./pkgs args;
 
@@ -21,12 +20,13 @@ let
     # Use local copy of Dotfile if we have one.
     if hasLocalDotfilesRepo
     then localDotfilesRepo
-    else (
-      # TODO(SuperPaintman): fetch submodules.
-      builtins.fetchGit {
-        url = "https://github.com/SuperPaintman/dotfiles";
-      }
-    )
+    else
+      (
+        # TODO(SuperPaintman): fetch submodules.
+        builtins.fetchGit {
+          url = "https://github.com/SuperPaintman/dotfiles";
+        }
+      )
   );
 
   # Check if config file exists.
@@ -91,12 +91,13 @@ in
     vim
     (
       unstable.vscode-with-extensions.override {
-        vscodeExtensions = let
-          vscodeExtensionsFile = "${dotfiles}/vscode/extensions.nix";
-        in
+        vscodeExtensions =
+          let
+            vscodeExtensionsFile = "${dotfiles}/vscode/extensions.nix";
+          in
           if builtins.pathExists vscodeExtensionsFile
           then (import vscodeExtensionsFile args)
-          else [];
+          else [ ];
       }
     )
     android-studio
@@ -257,14 +258,16 @@ in
   services.openvpn.servers =
     # Merge servicers into one set.
     lib.mkMerge (
-      builtins.map (
-        item: {
-          "${item.name}" = {
-            config = "config ${item.config}";
-            autoStart = false;
-          };
-        }
-      ) vpnConfigs
+      builtins.map
+        (
+          item: {
+            "${item.name}" = {
+              config = "config ${item.config}";
+              autoStart = false;
+            };
+          }
+        )
+        vpnConfigs
     );
 
   # Virtualisation.
@@ -287,29 +290,36 @@ in
     # Always ask password.
     wheelNeedsPassword = true;
 
-    extraConfig = let
-      vpnServices = builtins.map (item: item.name) vpnConfigs;
-      vpnCommands = [ "start" "stop" "restart" "status" ];
-    in
+    extraConfig =
+      let
+        vpnServices = builtins.map (item: item.name) vpnConfigs;
+        vpnCommands = [ "start" "stop" "restart" "status" ];
+      in
       ''
         # No password for `nixos-rebuild`.
         # %wheel ALL=(ALL:ALL) NOPASSWD: /run/current-system/sw/bin/nixos-rebuild switch
 
         # VPN.
-        ${lib.concatStringsSep "\n" (
-        lib.lists.flatten (
-          builtins.map (
-            name: (
-              [ "# openvpn-${name}.service." ]
-              ++ (
-                builtins.map (
-                  command: "%wheel ALL=(ALL:ALL) NOPASSWD: ${pkgs.systemd}/bin/systemctl ${command} openvpn-${name}.service"
-                ) vpnCommands
+        ${lib.concatStringsSep "\n"
+        (
+          lib.lists.flatten
+          (
+            builtins.map
+            (
+              name: (
+                [ "# openvpn-${name}.service." ]
+                ++ (
+                  builtins.map
+                  (
+                    command: "%wheel ALL=(ALL:ALL) NOPASSWD: ${pkgs.systemd}/bin/systemctl ${command} openvpn-${name}.service"
+                  )
+                  vpnCommands
+                )
               )
             )
-          ) vpnServices
-        )
-      )}
+            vpnServices
+          )
+        )}
 
         # Arduino.
         %wheel ALL=(ALL:ALL) NOPASSWD: ${pkgs.arduino}/bin/arduino
@@ -319,19 +329,22 @@ in
   # Home Manager.
   home-manager.users = (
     let
-      mkDonfilesSymlinks = files: pkgs.runCommand "symlink-dotfiles" {} ''
-        ${lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (
-          name: file: ''
-            # ${name}.
-            mkdir -p $out/$(dirname ${name})
-            ln -s ${toString file.source} $out/${name}
-          ''
-        ) files
-      )}
+      mkDonfilesSymlinks = files: pkgs.runCommand "symlink-dotfiles" { } ''
+        ${lib.concatStringsSep "\n"
+        (
+          lib.mapAttrsToList
+          (
+            name: file: ''
+              # ${name}.
+              mkdir -p $out/$(dirname ${name})
+              ln -s ${toString file.source} $out/${name}
+            ''
+          )
+          files
+        )}
       '';
 
-      filesToSymlinks = files: { ignore ? [] }:
+      filesToSymlinks = files: { ignore ? [ ] }:
         let
           checkIsSymlink = n: v:
             (lib.hasAttr "source" v) && (lib.all (re: builtins.match re n == null) ignore);
@@ -345,13 +358,15 @@ in
             let
               symlinks = mkDonfilesSymlinks files;
             in
-              lib.mapAttrs (
+            lib.mapAttrs
+              (
                 n: v: {
                   source = "${symlinks}/${n}";
                 }
-              ) files;
+              )
+              files;
         in
-          (replaceWithSymlinks groups.symlinks) // groups.rest;
+        (replaceWithSymlinks groups.symlinks) // groups.rest;
 
       files = lib.mkMerge [
         # Make symlinks to local dotfiles instead of nix derivatives to
@@ -365,59 +380,62 @@ in
               isMacOS = pkgs.stdenv.hostPlatform.isMacOS;
             };
           in
-            if hasLocalDotfilesRepo then (filesToSymlinks dotfilesFiles {}) else dotfilesFiles
+          if hasLocalDotfilesRepo then (filesToSymlinks dotfilesFiles { }) else dotfilesFiles
         )
       ];
 
       # TODO(SuperPaintman): replace it with nix function in the dotfiles.
-      firefoxFiles = let
-        configPath = ".mozilla/firefox";
-        profileName = "superpaintman";
-        profilePath = "${profileName}.default";
-        optionalFile = path: lib.optionalAttrs (builtins.pathExists "${dotfiles}/firefox/${path}") {
-          "${configPath}/${profilePath}/${path}".source = "${dotfiles}/firefox/${path}";
-        };
-      in
-        filesToSymlinks (
-          {
-            "${configPath}/profiles.ini".text = ''
-              [Profile0]
-              Name=default
-              IsRelative=1
-              Path=${profilePath}
-              Default=1
+      firefoxFiles =
+        let
+          configPath = ".mozilla/firefox";
+          profileName = "superpaintman";
+          profilePath = "${profileName}.default";
+          optionalFile = path: lib.optionalAttrs (builtins.pathExists "${dotfiles}/firefox/${path}") {
+            "${configPath}/${profilePath}/${path}".source = "${dotfiles}/firefox/${path}";
+          };
+        in
+        filesToSymlinks
+          (
+            {
+              "${configPath}/profiles.ini".text = ''
+                [Profile0]
+                Name=default
+                IsRelative=1
+                Path=${profilePath}
+                Default=1
 
-              [General]
-              StartWithLastProfile=1
-              Version=2
-            '';
-          }
-          // optionalFile "user.js"
-          // optionalFile "chrome/userChrome.css"
-          // optionalFile "chrome/userContent.css"
-        ) {};
+                [General]
+                StartWithLastProfile=1
+                Version=2
+              '';
+            }
+            // optionalFile "user.js"
+            // optionalFile "chrome/userChrome.css"
+            // optionalFile "chrome/userContent.css"
+          )
+          { };
     in
-      {
-        superpaintman = {
-          # Or pick manually.
-          # lib.getAttrs [
-          #   # Dotfiles.
-          #   ".dotfiles"
-          # ] files;
+    {
+      superpaintman = {
+        # Or pick manually.
+        # lib.getAttrs [
+        #   # Dotfiles.
+        #   ".dotfiles"
+        # ] files;
 
-          home.file = lib.mkMerge [
-            files
-            firefoxFiles
-          ];
-        };
+        home.file = lib.mkMerge [
+          files
+          firefoxFiles
+        ];
+      };
 
-        root = {
-          home.file = lib.mkMerge [
-            files
-            firefoxFiles
-          ];
-        };
-      }
+      root = {
+        home.file = lib.mkMerge [
+          files
+          firefoxFiles
+        ];
+      };
+    }
   );
 
   # Fonts.

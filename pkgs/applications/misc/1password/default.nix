@@ -5,11 +5,13 @@ stdenv.mkDerivation rec {
   version = "1.8.0";
   src =
     if stdenv.isLinux && stdenv.hostPlatform.system == "x86_64-linux"
-    then fetchzip {
-      url = "https://cache.agilebits.com/dist/1P/op/pkg/v${version}/op_linux_amd64_v${version}.zip";
-      sha256 = "0v3s0k0w526pzqa1r4n4zkfjkxfjw1blf7f0h57fwh915hcvc4lx";
-      stripRoot = false;
-    }
+    then
+      fetchzip
+        {
+          url = "https://cache.agilebits.com/dist/1P/op/pkg/v${version}/op_linux_amd64_v${version}.zip";
+          sha256 = "0v3s0k0w526pzqa1r4n4zkfjkxfjw1blf7f0h57fwh915hcvc4lx";
+          stripRoot = false;
+        }
     else throw "Architecture not supported";
 
   buildInputs = stdenv.lib.optionals stdenv.isDarwin [ xar cpio ];
