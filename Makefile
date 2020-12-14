@@ -1,4 +1,4 @@
-NIXOS_VERSION := 20.03
+NIXOS_VERSION := 20.09
 
 NIX_FILES := $(shell find -type f -name '*.nix')
 
