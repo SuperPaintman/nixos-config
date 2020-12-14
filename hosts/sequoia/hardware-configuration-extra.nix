@@ -16,6 +16,9 @@
     interfaces.eno1.useDHCP = true;
   };
 
+  # Sound.
+  sound.enable = true;
+
   # Hardware.
   hardware = {
     pulseaudio = {
