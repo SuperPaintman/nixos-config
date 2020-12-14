@@ -54,10 +54,6 @@ in
   # Nix Packages.
   nixpkgs.config.allowUnfree = true;
 
-  # Networking.
-  networking.hostName = "sequoia"; # TODO(SuperPaintman): change it. Sequoia is my desktop.
-  networking.networkmanager.enable = true;
-
   # Environment.
   environment.systemPackages = with pkgs; lib.lists.flatten [
     # Basic packages.
@@ -186,27 +182,18 @@ in
     zsh.enable = true;
   };
 
-  # Time.
-  time.timeZone = "Europe/Moscow";
-
-  # Sound.
-  sound.enable = true;
-
   # Hardware.
   hardware = {
     pulseaudio = {
-      enable = true; # Enable the PulseAudio sound server.
       support32Bit = true;
       package = pkgs.pulseaudioFull;
     };
 
     opengl = {
-      enable = true; # TODO(SuperPaintman): enable it only on Sequoia.
       driSupport32Bit = true;
     };
 
     bluetooth = {
-      enable = true;
       package = pkgs.bluezFull;
     };
   };
@@ -241,9 +228,6 @@ in
       # Turn NumLock on.
       ${numlockx}/bin/numlockx on
     '';
-
-    # Misc.
-    videoDrivers = [ "nvidia" ]; # TODO(SuperPaintman): enable it only on Sequoia.
   };
 
   services.picom = {
