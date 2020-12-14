@@ -6,7 +6,7 @@ My laptop.
 
 ## Specs
 
-DELL XPS 15 7590-6401
+[DELL XPS 15 7590-6401](https://github.com/NixOS/nixos-hardware/tree/master/dell/xps/15-7590)
 
 ## Installation
 
