@@ -79,5 +79,7 @@
     # SSD.
     # See: https://github.com/NixOS/nixos-hardware/blob/master/common/pc/ssd/default.nix
     # fstrim.enable = true;
+
+    thermald.enable = true;
   };
 }
