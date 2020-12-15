@@ -58,6 +58,10 @@
     # cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   };
 
+  # Nix Packages.
+  # Allow unfree for Nvidia drivers.
+  nixpkgs.config.allowUnfree = true;
+
   # Services.
   services = {
     xserver.videoDrivers = [ "nvidia" ];
