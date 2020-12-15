@@ -227,7 +227,7 @@ dirty curl \
 echo
 
 progress "Create /etc/nixos/configuration.nix"
-dirty_tee /mnt/etc/nixos/configuration.nix <<EOF
+dirty_tee /mnt/etc/nixos/configuration.nix << EOF
 { config, pkgs, ... }:
 
 {
