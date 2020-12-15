@@ -24,7 +24,7 @@
   networking = {
     useDHCP = false;
 
-    networking.interfaces.wlp59s0.useDHCP = true;
+    interfaces.wlp59s0.useDHCP = true;
   };
 
   # Sound.
