@@ -56,6 +56,16 @@
     # Intel CPU.
     # See: https://github.com/NixOS/nixos-hardware/blob/master/common/cpu/intel/default.nix
     # cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+    nvidia.prime = {
+      offload.enable = true;
+
+      # Bus ID of the Intel GPU.
+      intelBusId = "PCI:0:2:0";
+
+      # Bus ID of the NVIDIA GPU.
+      nvidiaBusId = "PCI:1:0:0";
+    };
   };
 
   # Nix Packages.
