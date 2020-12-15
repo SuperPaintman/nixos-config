@@ -11,6 +11,12 @@ My laptop.
 ## Installation
 
 ```bash
+$ curl -sL -o /tmp/setup.sh https://raw.githubusercontent.com/SuperPaintman/nixos-config/master/hosts/cashapona/setup.sh
+$ chmod +x /tmp/setup.sh
+$ sudo /tmp/setup.sh --dry
+```
+
+```bash
 # Make sure you in the dotfiles dir.
 $ DOTFILES="$(pwd)"
 
