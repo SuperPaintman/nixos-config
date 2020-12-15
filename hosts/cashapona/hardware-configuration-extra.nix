@@ -10,16 +10,15 @@
 
     efi.canTouchEfiVariables = true;
 
-    # Intel CPI.
-    # See: https://github.com/NixOS/nixos-hardware/blob/master/common/cpu/intel/default.nix
-    initrd.kernelModules = [ "i915" ];
-
     # SSD.
     # See: https://github.com/NixOS/nixos-hardware/blob/master/common/pc/ssd/default.nix
     # kernel.sysctl = {
     #   "vm.swappiness" = lib.mkDefault 1;
     # };
   };
+  # Intel CPU.
+  # See: https://github.com/NixOS/nixos-hardware/blob/master/common/cpu/intel/default.nix
+  boot.initrd.kernelModules = [ "i915" ];
 
   # Networking.
   networking = {
