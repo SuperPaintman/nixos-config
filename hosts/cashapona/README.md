@@ -11,9 +11,17 @@ My laptop.
 ## Installation
 
 ```bash
+# Setup the machine. It does partitioning, formatting and installing.
 $ curl -sL -o /tmp/setup.sh https://raw.githubusercontent.com/SuperPaintman/nixos-config/master/hosts/cashapona/setup.sh
 $ chmod +x /tmp/setup.sh
 $ sudo /tmp/setup.sh --dry
+
+# Then reboot the machine and run `install.sh` once.
+
+# Create main user and install all files.
+$ curl -sL -o /tmp/install.sh https://raw.githubusercontent.com/SuperPaintman/nixos-config/master/hosts/cashapona/install.sh
+$ chmod +x /tmp/install.sh
+$ sudo /tmp/install.sh --dry
 ```
 
 ```bash
