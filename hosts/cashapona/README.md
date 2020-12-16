@@ -33,3 +33,8 @@ $ sudo tee /etc/nixos/configuration.nix <<EOF
 }
 EOF
 ```
+
+## Links
+
+- [DELL XPS 15 7590](https://github.com/NixOS/nixos-hardware/tree/master/dell/xps/15-7590) - NixOS profile from **nixos-hardware**.
+- [Dell XPS 15 7590](https://wiki.archlinux.org/index.php/Dell_XPS_15_7590) - Arch linux wiki.
