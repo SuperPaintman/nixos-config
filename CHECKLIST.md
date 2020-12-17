@@ -11,3 +11,18 @@ I think many of them should be replaced with a script.
 - [ ] Update remote hosts in cloned repos (on the installation).
   - [ ] Dotfiles: `(cd ~/Projects/github.com/SuperPaintman/dotfiles && git remote set-url origin git@github.com:SuperPaintman/dotfiles.git)`.
   - [ ] NixOS Configuration: `(cd ~/Projects/github.com/SuperPaintman/nixos-config && git remote set-url origin git@github.com:SuperPaintman/nixos-config.git)`.
+- [ ] Create token for **telethon** (using in `telegramstatus`).
+  1. Login on <https://my.telegram.org/apps>.
+  2. Create the config file and paste yout `api_id` and `api_hash`.
+  ```sh
+  $ mkdir -p ~/.telethon
+  $ read -s API_ID
+  $ read -s API_HASH
+  $ cat << EOF > ~/.telethon/session.json
+  {
+    "api_id": $API_ID,
+    "api_hash": "$API_HASH"
+  }
+  EOF
+  ```
+  3. Run `telegramstatus` and follow the instructions.
