@@ -74,16 +74,7 @@
 
   # Services.
   services = {
-    xserver = {
-      videoDrivers = [ "nvidia" ];
-
-      libinput = {
-        enable = true;
-
-        # Enable natural scrolling behavior.
-        naturalScrolling = true;
-      };
-    };
+    xserver.videoDrivers = [ "nvidia" ];
 
     # SSD.
     # See: https://github.com/NixOS/nixos-hardware/blob/master/common/pc/ssd/default.nix
