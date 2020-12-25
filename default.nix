@@ -210,14 +210,6 @@ in
       "grp_led:caps" # Use led as indicator.
     ];
 
-    # Touchpad.
-    libinput = {
-      enable = true;
-
-      # Enable natural scrolling behavior.
-      naturalScrolling = true;
-    };
-
     # Display, desktop and window managers.
     displayManager.sddm = {
       enable = true;
