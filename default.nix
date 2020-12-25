@@ -227,7 +227,53 @@ in
     desktopManager.xterm.enable = false;
     desktopManager.plasma5.enable = true;
 
-    windowManager.awesome.enable = true;
+    windowManager.awesome =
+      let
+        # By default AwesomeWM doesn't write logs.
+        #
+        # We add writing logs into the files.
+        #
+        # See: https://awesomewm.org/apidoc/documentation/90-FAQ.md.html
+        logfiles = {
+          stdout = "$HOME/.cache/awesome/stdout";
+          stderr = "$HOME/.cache/awesome/stderr";
+        };
+
+        awesomeWithLogs = pkgs.stdenv.mkDerivation rec {
+          name = "awesome-with-logs";
+
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+
+          phases = [ "installPhase" ];
+
+          installPhase = ''
+            mkdir -p $out/bin
+
+            # Link all bin files.
+            for b in ${pkgs.awesome}/bin/*; do
+              if [ ! -f "$b" ]; then
+                continue
+              fi
+
+              makeWrapper "$b" "$out/bin/$(basename $b)"
+            done
+
+            # Override awesome.
+            rm -f "$out/bin/awesome"
+            echo "#! ${pkgs.runtimeShell} -e" > "$out/bin/awesome"
+            echo eval \"${pkgs.awesome}/bin/awesome\" '"$@"' \
+              \>\> \"${logfiles.stdout}\" \
+              2\>\> \"${logfiles.stderr}\" \
+              >> "$out/bin/awesome"
+            chmod +x "$out/bin/awesome"
+          '';
+        };
+      in
+      {
+        enable = true;
+
+        package = awesomeWithLogs;
+      };
 
     displayManager.sessionCommands = with pkgs; ''
       # Load X resources.
