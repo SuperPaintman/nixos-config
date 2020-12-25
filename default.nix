@@ -253,9 +253,9 @@ in
             # Override awesome.
             rm -f "$out/bin/awesome"
             echo "#! ${pkgs.runtimeShell} -e" > "$out/bin/awesome"
-            echo eval \"${pkgs.awesome}/bin/awesome\" '"$@"' \
-              \>\> \"${logfiles.stdout}\" \
-              2\>\> \"${logfiles.stderr}\" \
+            echo exec \"${pkgs.awesome}/bin/awesome\" '"$@"' \
+              \>\> \"'${logfiles.stdout}'\" \
+              2\>\> \"'${logfiles.stderr}'\" \
               >> "$out/bin/awesome"
             chmod +x "$out/bin/awesome"
           '';
