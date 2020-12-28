@@ -211,13 +211,25 @@ in
     ];
 
     # Display, desktop and window managers.
-    displayManager.sddm = {
-      enable = true;
-      autoNumlock = true;
+    displayManager = {
+      sddm = {
+        enable = true;
+        autoNumlock = true;
+      };
+
+      sessionCommands = with pkgs; ''
+        # Load X resources.
+        ${xorg.xrdb}/bin/xrdb -load ~/.Xresources
+
+        # Turn NumLock on.
+        ${numlockx}/bin/numlockx on
+      '';
     };
 
-    desktopManager.xterm.enable = false;
-    desktopManager.plasma5.enable = true;
+    desktopManager = {
+      xterm.enable = false;
+      plasma5.enable = true;
+    };
 
     windowManager.awesome =
       let
@@ -266,14 +278,6 @@ in
 
         package = awesomeWithLogs;
       };
-
-    displayManager.sessionCommands = with pkgs; ''
-      # Load X resources.
-      ${xorg.xrdb}/bin/xrdb -load ~/.Xresources
-
-      # Turn NumLock on.
-      ${numlockx}/bin/numlockx on
-    '';
   };
 
   services.picom = {

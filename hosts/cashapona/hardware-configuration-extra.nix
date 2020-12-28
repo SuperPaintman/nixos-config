@@ -1,6 +1,6 @@
 # See: https://github.com/NixOS/nixos-hardware/tree/master/dell/xps/15-7590
 
-{ config, lib, pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   # Boot.
@@ -76,6 +76,25 @@
   services = {
     xserver = {
       videoDrivers = [ "nvidia" ];
+
+      # Display manager.
+      displayManager =
+        let
+          xrandrCommands = with pkgs; ''
+            ${xorg.xrandr}/bin/xrandr --output eDP-1 --primary --pos 0x1080 --output DP-3 --pos 0x0
+          '';
+        in
+        {
+          setupCommands = ''
+            # Setup displays.
+            ${xrandrCommands}
+          '';
+
+          sessionCommands = ''
+            # Setup displays.
+            ${xrandrCommands}
+          '';
+        };
 
       # Touchpad.
       libinput = {

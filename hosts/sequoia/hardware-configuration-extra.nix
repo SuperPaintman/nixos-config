@@ -39,7 +39,28 @@
   nixpkgs.config.allowUnfree = true;
 
   # Services.
-  services.xserver = {
-    videoDrivers = [ "nvidia" ];
+  services = {
+    xserver = {
+      videoDrivers = [ "nvidia" ];
+
+      # Display manager.
+      displayManager =
+        let
+          xrandrCommands = with pkgs; ''
+            ${xorg.xrandr}/bin/xrandr --output DVI-D-0 --left-of DVI-I-1
+          '';
+        in
+        {
+          setupCommands = ''
+            # Setup displays.
+            ${xrandrCommands}
+          '';
+
+          sessionCommands = ''
+            # Setup displays.
+            ${xrandrCommands}
+          '';
+        };
+    };
   };
 }
