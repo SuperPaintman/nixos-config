@@ -120,6 +120,7 @@ in
     llvm
     go
     gotools
+    gopls
     godef
     go-outline
     gomodifytags
