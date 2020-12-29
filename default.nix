@@ -29,6 +29,21 @@ let
       )
   );
 
+  monitroid = (
+    # Use local copy of Monitroid if we have one.
+    if builtins.pathExists /home/superpaintman/Projects/github.com/SuperPaintman/monitroid
+    then /home/superpaintman/Projects/github.com/SuperPaintman/monitroid
+    else
+      (
+        # TODO(SuperPaintman): fetch submodules.
+        builtins.fetchGit {
+          url = "https://github.com/SuperPaintman/monitroid";
+        }
+      )
+  );
+
+  monitroidPkgs = pkgs.callPackage monitroid {};
+
   # Check if config file exists.
   vpnConfigs = builtins.filter (item: builtins.pathExists item.config) [
     { name = "server"; config = "/home/superpaintman/.openvpn/server.conf"; }
@@ -38,6 +53,7 @@ in
   # Imports.
   imports = [
     (import "${home-manager}/nixos")
+    (import "${monitroid}/nixos")
   ];
 
   # Boot.
@@ -175,6 +191,9 @@ in
     libnotify # A library that sends desktop notifications to a notification daemon.
     localPkgs._1password # 1Password command-line tool.
     localPkgs.gh # GitHub CLI tool.
+
+    # Custom / mine.
+    monitroidPkgs.monitroid # Machine stats.
   ];
 
   # Programs.
@@ -304,6 +323,9 @@ in
         )
         vpnConfigs
     );
+
+  # Services: custom / mine.
+  services.monitroid.enable = true;
 
   # Virtualisation.
   virtualisation.docker.enable = true;
