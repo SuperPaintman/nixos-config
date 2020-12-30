@@ -42,7 +42,7 @@ let
       )
   );
 
-  monitroidPkgs = pkgs.callPackage monitroid {};
+  monitroidPkgs = pkgs.callPackage monitroid { };
 
   # Check if config file exists.
   vpnConfigs = builtins.filter (item: builtins.pathExists item.config) [

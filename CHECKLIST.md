@@ -35,3 +35,7 @@ I think many of them should be replaced with a script.
   3. Run `telegramstatus` and follow the instructions.
 
 - [ ] Download the wallpaper. `curl -sL http://localhost -o ~/.wallpaper`.
+
+- [ ] Setup Firefox.
+
+  - [ ] Set the default search engine. `firefox about:preferences#search`.
