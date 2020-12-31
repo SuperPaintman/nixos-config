@@ -2,6 +2,21 @@
 
 { pkgs, lib, ... }@args:
 let
+  getLocalOrRemote = { local, remote }:
+    # Use a local copy if we have one.
+    if builtins.pathExists local
+    then rec {
+      path = local;
+      isLocal = true;
+      isRemote = !isLocal;
+    }
+    else rec {
+      path = remote;
+      isLocal = false;
+      isRemote = !isLocal;
+    };
+in
+let
   localPkgs = import ./pkgs args;
 
   home-manager = builtins.fetchGit {
@@ -12,37 +27,23 @@ let
 
   unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
 
-  localDotfilesRepo = /home/superpaintman/Projects/github.com/SuperPaintman/dotfiles;
+  dotfiles = getLocalOrRemote {
+    local = /home/superpaintman/Projects/github.com/SuperPaintman/dotfiles;
+    # TODO(SuperPaintman): fetch submodules.
+    remote = builtins.fetchGit {
+      url = "https://github.com/SuperPaintman/dotfiles";
+    };
+  };
 
-  hasLocalDotfilesRepo = builtins.pathExists localDotfilesRepo;
+  monitroid = getLocalOrRemote {
+    local = /home/superpaintman/Projects/github.com/SuperPaintman/monitroid;
+    # TODO(SuperPaintman): fetch submodules.
+    remote = builtins.fetchGit {
+      url = "https://github.com/SuperPaintman/monitroid";
+    };
+  };
 
-  dotfiles = (
-    # Use local copy of Dotfile if we have one.
-    if hasLocalDotfilesRepo
-    then localDotfilesRepo
-    else
-      (
-        # TODO(SuperPaintman): fetch submodules.
-        builtins.fetchGit {
-          url = "https://github.com/SuperPaintman/dotfiles";
-        }
-      )
-  );
-
-  monitroid = (
-    # Use local copy of Monitroid if we have one.
-    if builtins.pathExists /home/superpaintman/Projects/github.com/SuperPaintman/monitroid
-    then /home/superpaintman/Projects/github.com/SuperPaintman/monitroid
-    else
-      (
-        # TODO(SuperPaintman): fetch submodules.
-        builtins.fetchGit {
-          url = "https://github.com/SuperPaintman/monitroid";
-        }
-      )
-  );
-
-  monitroidPkgs = pkgs.callPackage monitroid { };
+  monitroidPkgs = pkgs.callPackage monitroid.path { };
 
   # Check if config file exists.
   vpnConfigs = builtins.filter (item: builtins.pathExists item.config) [
@@ -53,7 +54,7 @@ in
   # Imports.
   imports = [
     (import "${home-manager}/nixos")
-    (import "${monitroid}/nixos")
+    (import "${monitroid.path}/nixos")
   ];
 
   # Boot.
@@ -105,7 +106,7 @@ in
       unstable.vscode-with-extensions.override {
         vscodeExtensions =
           let
-            vscodeExtensionsFile = "${dotfiles}/vscode/extensions.nix";
+            vscodeExtensionsFile = "${dotfiles.path}/vscode/extensions.nix";
           in
           if builtins.pathExists vscodeExtensionsFile
           then (import vscodeExtensionsFile args)
@@ -433,11 +434,11 @@ in
             # Support old dotfiles format.
             callIfFunction = f: args: if builtins.isFunction f then (f args) else f;
 
-            dotfilesFiles = callIfFunction (import dotfiles) {
+            dotfilesFiles = callIfFunction (import dotfiles.path) {
               isMacOS = pkgs.stdenv.hostPlatform.isMacOS;
             };
           in
-          if hasLocalDotfilesRepo then (filesToSymlinks dotfilesFiles { }) else dotfilesFiles
+          if dotfiles.isLocal then (filesToSymlinks dotfilesFiles { }) else dotfilesFiles
         )
       ];
 
@@ -447,8 +448,8 @@ in
           configPath = ".mozilla/firefox";
           profileName = "superpaintman";
           profilePath = "${profileName}.default";
-          optionalFile = path: lib.optionalAttrs (builtins.pathExists "${dotfiles}/firefox/${path}") {
-            "${configPath}/${profilePath}/${path}".source = "${dotfiles}/firefox/${path}";
+          optionalFile = path: lib.optionalAttrs (builtins.pathExists "${dotfiles.path}/firefox/${path}") {
+            "${configPath}/${profilePath}/${path}".source = "${dotfiles.path}/firefox/${path}";
           };
         in
         filesToSymlinks
