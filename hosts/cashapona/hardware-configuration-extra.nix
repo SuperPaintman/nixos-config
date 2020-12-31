@@ -85,11 +85,40 @@
           xrandrCommands = with pkgs; ''
             ${xorg.xrandr}/bin/xrandr --output eDP-1 --primary --pos 0x1080 --output DP-3 --pos 0x0
           '';
+
+          # See: `xbindkeys -d`
+          # See: `xbindkeys -k`
+          # See: `xmodmap -pk`
+          xbindkeysRC = pkgs.writeText ".xbindkeysrc" (with pkgs; ''
+            # Fn+F1.
+            "${pulseaudio}/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle"
+              XF86AudioMute
+
+            # Fn+F2.
+            "${pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ +5%"
+              XF86AudioRaiseVolume
+
+            # Fn+F3.
+            "${pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ -5%"
+              XF86AudioLowerVolume
+
+            # Fn+F11.
+            "${brightnessctl}/bin/brightnessctl set 5%-"
+              XF86MonBrightnessDown
+
+            # Fn+F12.
+            "${brightnessctl}/bin/brightnessctl set +5%"
+              XF86MonBrightnessUp
+          '');
         in
         {
-          setupCommands = ''
+          setupCommands = with pkgs; ''
             # Setup displays.
             ${xrandrCommands}
+
+            # Setup Fn keys.
+            ${procps}/bin/pkill xbindkeys || true
+            ${xbindkeys}/bin/xbindkeys --file ${xbindkeysRC}
           '';
 
           sessionCommands = ''
