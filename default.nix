@@ -223,6 +223,8 @@ in
   services.xserver = {
     enable = true;
 
+    exportConfiguration = true;
+
     # Keyboard.
     layout = lib.concatStringsSep "," [ "us" "ru" ];
     xkbOptions = lib.concatStringsSep "," [
