@@ -1,5 +1,6 @@
 # See: https://github.com/NixOS/nixos-hardware/tree/master/dell/xps/15-7590
 # See: https://wiki.archlinux.org/index.php/Dell_XPS_15
+# See: https://xps-15.fandom.com/wiki/XPS_15_Wiki
 
 { config, pkgs, ... }:
 

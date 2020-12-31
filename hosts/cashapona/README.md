@@ -42,7 +42,12 @@ $ sudo tee /etc/nixos/configuration.nix <<EOF
 EOF
 ```
 
+## Issues
+
+- My laptop makes the "[coil whine](https://xps-15.fandom.com/wiki/High_Pitched_Chattering/Squeal)" sound.
+
 ## Links
 
 - [Dell XPS 15 7590](https://github.com/NixOS/nixos-hardware/tree/master/dell/xps/15-7590) - NixOS profile from **nixos-hardware**.
 - [Dell XPS 15 7590](https://wiki.archlinux.org/index.php/Dell_XPS_15_7590) - Arch linux wiki.
+- [Dell XPS 15 7590](https://xps-15.fandom.com/wiki/XPS_15_Wiki) - XPS 15 Fandom wiki.
