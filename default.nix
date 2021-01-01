@@ -246,6 +246,9 @@ in
 
         # Turn NumLock on.
         ${numlockx}/bin/numlockx on
+
+        # Remove previous AwesomeWM state.
+        ${coreutils}/bin/rm -f ~/.cache/awesome/state.json
       '';
     };
 
