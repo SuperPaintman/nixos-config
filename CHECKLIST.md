@@ -39,3 +39,4 @@ I think many of them should be replaced with a script.
 - [ ] Setup Firefox.
 
   - [ ] Set the default search engine. `firefox about:preferences#search`.
+  - [ ] Set "Open links in tabs instead of new windows".
