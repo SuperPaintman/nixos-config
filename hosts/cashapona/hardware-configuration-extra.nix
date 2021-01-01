@@ -89,7 +89,20 @@
           # See: `xbindkeys -d`
           # See: `xbindkeys -k`
           # See: `xmodmap -pk`
-          xbindkeysRC = pkgs.writeText ".xbindkeysrc" (with pkgs; ''
+          xbindkeysRCSetup = pkgs.writeText ".xbindkeysrc-xsetup" (with pkgs; ''
+            # Fn+F11.
+            "${brightnessctl}/bin/brightnessctl set 5%-"
+              XF86MonBrightnessDown
+
+            # Fn+F12.
+            "${brightnessctl}/bin/brightnessctl set +5%"
+              XF86MonBrightnessUp
+          '');
+
+          xbindkeysRCSession = pkgs.writeText ".xbindkeysrc-xsession" (with pkgs; ''
+            # pactl needs a logged in user to work.
+            #
+            # See: `pa_context_connect() failed: Connection refused`.
             # Fn+F1.
             "${pulseaudio}/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle"
               XF86AudioMute
@@ -101,14 +114,6 @@
             # Fn+F3.
             "${pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ -5%"
               XF86AudioLowerVolume
-
-            # Fn+F11.
-            "${brightnessctl}/bin/brightnessctl set 5%-"
-              XF86MonBrightnessDown
-
-            # Fn+F12.
-            "${brightnessctl}/bin/brightnessctl set +5%"
-              XF86MonBrightnessUp
           '');
         in
         {
@@ -118,12 +123,16 @@
 
             # Setup Fn keys.
             ${procps}/bin/pkill xbindkeys || true
-            ${xbindkeys}/bin/xbindkeys --file ${xbindkeysRC}
+            ${xbindkeys}/bin/xbindkeys --file ${xbindkeysRCSetup}
           '';
 
-          sessionCommands = ''
+          sessionCommands = with pkgs; ''
             # Setup displays.
             ${xrandrCommands}
+
+            # Setup Fn keys.
+            ${procps}/bin/pkill xbindkeys || true
+            ${xbindkeys}/bin/xbindkeys --file ${xbindkeysRCSession}
           '';
         };
 
