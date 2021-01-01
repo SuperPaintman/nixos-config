@@ -40,3 +40,19 @@ I think many of them should be replaced with a script.
 
   - [ ] Set the default search engine. `firefox about:preferences#search`.
   - [ ] Set "Open links in tabs instead of new windows".
+
+- [ ] Setup Telegram.
+
+  - [ ] Set the theme.
+    1. Download the theme.
+    ```sh
+    $ curl -sL 'https://github.com/SuperPaintman/Tomorrow-Night-Telegram-Theme/releases/download/v0.1.1/tomorrow-night.tdesktop-theme' -o ~/Downloads/tomorrow-night.tdesktop-theme
+    ```
+    2. Upload the theme to any chat.
+    3. Click on a new message.
+    4. `"APPLY THIS THEME"`.
+    5. `"KEEP CHANGES"`.
+  - [ ] Disable tray icon. `"Settings > Advinced > Show tray icon"`.
+  - [ ] Use system window frame. `"Settings > Advinced > Use system window frame"`.
+  - [ ] Use native notifications. `"Settings > Notifications > Use native notifications"`.
+  - [ ] Disable notification sound. `"Settings > Notifications > Play sound"`.
