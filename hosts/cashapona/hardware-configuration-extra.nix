@@ -2,7 +2,7 @@
 # See: https://wiki.archlinux.org/index.php/Dell_XPS_15
 # See: https://xps-15.fandom.com/wiki/XPS_15_Wiki
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   # Boot.
@@ -86,35 +86,68 @@
             ${xorg.xrandr}/bin/xrandr --output eDP-1 --primary --pos 0x1080 --output DP-3 --pos 0x0
           '';
 
-          # See: `xbindkeys -d`
-          # See: `xbindkeys -k`
-          # See: `xmodmap -pk`
-          xbindkeysRCSetup = pkgs.writeText ".xbindkeysrc-xsetup" (with pkgs; ''
-            # Fn+F11.
-            "${brightnessctl}/bin/brightnessctl set 5%-"
-              XF86MonBrightnessDown
+          xbindkeysConfig = {
+            # See: `xbindkeys -d`
+            # See: `xbindkeys -k`
+            # See: `xmodmap -pk`
+            bindings = with pkgs; [
+              # pactl needs a logged in user to work.
+              #
+              # See: `pa_context_connect() failed: Connection refused`.
+              # Fn+F1.
+              {
+                key = "XF86AudioMute";
+                command = "${pulseaudio}/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle";
+                session = true;
+              }
 
-            # Fn+F12.
-            "${brightnessctl}/bin/brightnessctl set +5%"
-              XF86MonBrightnessUp
-          '');
+              # Fn+F2.
+              {
+                key = "XF86AudioRaiseVolume";
+                command = "${pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ +5%";
+                session = true;
+              }
 
-          xbindkeysRCSession = pkgs.writeText ".xbindkeysrc-xsession" (with pkgs; ''
-            # pactl needs a logged in user to work.
-            #
-            # See: `pa_context_connect() failed: Connection refused`.
-            # Fn+F1.
-            "${pulseaudio}/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle"
-              XF86AudioMute
+              # Fn+F3.
+              {
+                key = "XF86AudioLowerVolume";
+                command = "${pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ -5%";
+                session = true;
+              }
 
-            # Fn+F2.
-            "${pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ +5%"
-              XF86AudioRaiseVolume
+              # Fn+F11.
+              {
+                key = "XF86MonBrightnessDown";
+                command = "${brightnessctl}/bin/brightnessctl set 5%-";
+              }
 
-            # Fn+F3.
-            "${pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ -5%"
-              XF86AudioLowerVolume
-          '');
+              # Fn+F12.
+              {
+                key = "XF86MonBrightnessUp";
+                command = "${brightnessctl}/bin/brightnessctl set +5%";
+              }
+            ];
+          };
+
+          xbindkeysFilter = { session ? false }: bindings:
+            builtins.filter (opts: (if opts ? "session" then opts.session else false) == session) bindings;
+
+          toXbindkeysConfig = bindings: ''
+            ${lib.concatMapStringsSep "\n"
+              ({ key, command, ... }: ''
+                "${command}"
+                  ${key}
+              '')
+            bindings}
+          '';
+
+          xbindkeysRCSetup = pkgs.writeText ".xbindkeysrc-xsetup" ''
+            ${toXbindkeysConfig (xbindkeysFilter { session = false; } xbindkeysConfig.bindings)}
+          '';
+
+          xbindkeysRCSession = pkgs.writeText ".xbindkeysrc-xsession" ''
+            ${toXbindkeysConfig (xbindkeysFilter { session = true; } xbindkeysConfig.bindings)}
+          '';
         in
         {
           setupCommands = with pkgs; ''
