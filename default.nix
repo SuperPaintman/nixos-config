@@ -89,6 +89,7 @@ in
     bind # dig
     wirelesstools
     lsof
+    brightnessctl
 
     # Replacements for basic utils.
     exa # ls
