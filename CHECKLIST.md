@@ -57,4 +57,11 @@ I think many of them should be replaced with a script.
   - [ ] Use native notifications. `"Settings > Notifications > Use native notifications"`.
   - [ ] Disable notification sound. `"Settings > Notifications > Play sound"`.
 
-- [ ] Install Rust toolchain. `rustup toolchain install nightly`.
+- [ ] Install Rust toolchain.
+  ```sh
+  $ rustup default stable
+  $ rustup toolchain install stable
+  $ rustup component add rust-analysis
+  $ rustup component add rls
+  $ rustup component add rust-src
+  ```
