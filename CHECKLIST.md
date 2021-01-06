@@ -56,3 +56,5 @@ I think many of them should be replaced with a script.
   - [ ] Use system window frame. `"Settings > Advinced > Use system window frame"`.
   - [ ] Use native notifications. `"Settings > Notifications > Use native notifications"`.
   - [ ] Disable notification sound. `"Settings > Notifications > Play sound"`.
+
+- [ ] Install Rust toolchain. `rustup toolchain install nightly`.
