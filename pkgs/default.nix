@@ -8,4 +8,7 @@ with pkgs; rec {
 
   # Development.
   rustup-openssl = callPackage ./development/tools/rust/rustup-openssl { };
+
+  # Misc.
+  firefox-install-extensions = callPackage ./misc/firefox-install-extensions { };
 }

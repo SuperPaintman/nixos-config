@@ -118,6 +118,17 @@ in
 
     # Browsers.
     firefox
+    (
+      localPkgs.firefox-install-extensions {
+        extensions =
+          let
+            firefoxExtensionsFile = "${dotfiles.path}/firefox/extensions.nix";
+          in
+          if builtins.pathExists firefoxExtensionsFile
+          then (import firefoxExtensionsFile args)
+          else [ ];
+      }
+    )
     chromium
 
     # Messengers.
