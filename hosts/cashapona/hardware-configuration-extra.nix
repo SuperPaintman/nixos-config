@@ -86,6 +86,25 @@
             ${xorg.xrandr}/bin/xrandr --output eDP-1 --primary --pos 0x1080 --output DP-3 --pos 0x0
           '';
 
+          xinputToggleTouchpadCommand = name: with pkgs; writeShellScript "xinput-toggle-touchpad" ''
+            set -e
+            set -u
+            set -o pipefail
+
+            device_id="$(${xorg.xinput}/bin/xinput list | ${gnugrep}/bin/grep '${name}' | ${gnugrep}/bin/grep -Po 'id=(\d+)' | ${gawk}/bin/awk -F '=' '{print $2}')"
+            if [[ "$device_id" == "" ]]; then
+              exit 1
+            fi
+
+            state="$(${xorg.xinput}/bin/xinput list-props "$device_id" | ${gnugrep}/bin/grep 'Device Enabled' | ${gawk}/bin/awk '{print $4}')"
+
+            if [[ "$state" == 1 ]]; then
+              ${xorg.xinput}/bin/xinput disable "$device_id"
+            else
+              ${xorg.xinput}/bin/xinput enable "$device_id"
+            fi
+          '';
+
           xbindkeysConfig = {
             # See: `xbindkeys -d`
             # See: `xbindkeys -k`
@@ -113,6 +132,12 @@
                 key = "XF86AudioLowerVolume";
                 command = "${pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ -5%";
                 session = true;
+              }
+
+              # Fn+F9.
+              {
+                key = "XF86Search";
+                command = "${xinputToggleTouchpadCommand "SYNA2393:00 06CB:7A13 Touchpad"}";
               }
 
               # Fn+F11.
