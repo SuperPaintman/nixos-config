@@ -103,6 +103,7 @@ in
 
     # Editors.
     vim
+    emacs
     (
       unstable.vscode-with-extensions.override {
         vscodeExtensions =
