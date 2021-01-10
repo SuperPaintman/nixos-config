@@ -1,6 +1,6 @@
 # NixOS Configuration
 
-> ## FILES MOVED INTO THE [DOTFILES REPO](https://github.com/SuperPaintman/dotfiles)
+> ## ⚠️ FILES MOVED INTO THE [DOTFILES REPO](https://github.com/SuperPaintman/dotfiles) ⚠️
 
 ```sh
 # Set NixOS channel.
