@@ -1,5 +1,7 @@
 # NixOS Configuration
 
+> ## FILES MOVED INTO THE [DOTFILES REPO](https://github.com/SuperPaintman/dotfiles)
+
 ```sh
 # Set NixOS channel.
 # See: https://nixos.org/nixos/manual/index.html#sec-upgrading .
