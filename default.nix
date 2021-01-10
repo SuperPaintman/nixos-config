@@ -137,7 +137,7 @@ in
     skypeforlinux
 
     # Terminals.
-    alacritty
+    unstable.alacritty
     xst
 
     # Compilers, interpreters and dev packages.
